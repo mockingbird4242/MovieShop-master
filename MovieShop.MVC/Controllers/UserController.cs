@@ -21,12 +21,14 @@ namespace MovieShop.MVC.Controllers
             _movieService = movieService;
         }
 
+        [Authorize(Roles ="Admin, Customer, SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> BuyMovie(int id)
         {
             var movie = await _movieService.GetMovieById(id);
             return View(movie);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> BuyMovie(PurchaseRequestModel purchase)
