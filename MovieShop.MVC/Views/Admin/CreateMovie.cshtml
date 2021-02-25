@@ -1,0 +1,102 @@
+﻿@model MovieShop.Core.Models.Request.MovieDetailsRequestModel  
+
+<h3>
+    Create Movie
+</h3>
+
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="CreateMovie">
+            <div class="form-group">
+                <label class="control-label" asp-for="Title"> Title</label>
+                <input class="form-control" asp-for="Title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Overview"> OverView</label>
+                <input class="form-control" asp-for="Overview" type="text" />
+                <span asp-validation-for="Overview" class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" asp-for="Tagline"> Tagline</label>
+                <input class="form-control" asp-for="Tagline" />
+                <span asp-validation-for="Tagline" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Budget"> Budget</label>
+                <input class="form-control" asp-for="Budget" />
+                <span asp-validation-for="Budget" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Revenue"> Revenue</label>
+                <input class="form-control" asp-for="Revenue" />
+                <span asp-validation-for="Revenue" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="ImdbUrl"> ImdbUrl</label>
+                <input class="form-control" asp-for="ImdbUrl" />
+                <span asp-validation-for="ImdbUrl" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="TmdbUrl"> TmdbUrl</label>
+                <input class="form-control" asp-for="TmdbUrl" />
+                <span asp-validation-for="TmdbUrl" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="PosterUrl"> PosterUrl</label>
+                <input class="form-control" asp-for="PosterUrl" />
+                <span asp-validation-for="PosterUrl" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="BackdropUrl"> BackdropUrl</label>
+                <input class="form-control" asp-for="BackdropUrl" />
+                <span asp-validation-for="BackdropUrl" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="OriginalLanguage"> OriginalLanguage</label>
+                <input class="form-control" asp-for="OriginalLanguage" />
+                <span asp-validation-for="OriginalLanguage" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="ReleaseDate"> ReleaseDate</label>
+                <input class="form-control" asp-for="ReleaseDate" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="RunTime"> RunTime</label>
+                <input class="form-control" asp-for="RunTime" />
+                <span asp-validation-for="RunTime" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Price"> Price</label>
+                <input class="form-control" asp-for="Price" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+
+            </div>
+
+            <div>
+                <input type="submit" name="registerButton" value="Register" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

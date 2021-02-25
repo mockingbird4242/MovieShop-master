@@ -57,5 +57,11 @@ namespace MovieShop.Infrastructure.Repositories
                 }).ToListAsync();
             return purchases;
         }
+
+        public async Task<Movie> GetMovieByTitle(string title)
+        {
+            var movie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.Title == title);
+            return movie;
+        }
     }
 }

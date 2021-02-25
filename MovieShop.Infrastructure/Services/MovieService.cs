@@ -7,6 +7,8 @@ using MovieShop.Infrastructure.Repositories;
 using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Core.Models.Response;
 using System.Threading.Tasks;
+using MovieShop.Core.Models.Request;
+using MovieShop.Core.Exceptions;
 
 namespace MovieShop.Infrastructure.Services
 {
@@ -18,6 +20,39 @@ namespace MovieShop.Infrastructure.Services
         public MovieService(IMovieRepository movieRepository) // Constructor with an Interface as parameter: pass a class that implement this Interface
         {
             _movieRepository = movieRepository; // 
+        }
+
+        public async Task<bool> CreateMovie(MovieDetailsRequestModel movieDetailsRequestModel)
+        {
+            var dbMovie = await _movieRepository.GetMovieByTitle(movieDetailsRequestModel.Title);
+            if (dbMovie != null)
+            {
+                throw new MovieConflictException("Movie already exists");
+            }
+            var movie = new Movie
+            {
+                Title = movieDetailsRequestModel.Title,
+                Overview = movieDetailsRequestModel.Overview,
+                Tagline = movieDetailsRequestModel.Tagline,
+                Budget = movieDetailsRequestModel.Budget,
+                Revenue = movieDetailsRequestModel.Revenue,
+                ImdbUrl = movieDetailsRequestModel.ImdbUrl,
+                TmdbUrl = movieDetailsRequestModel.TmdbUrl,
+                PosterUrl = movieDetailsRequestModel.PosterUrl,
+                BackdropUrl = movieDetailsRequestModel.BackdropUrl,
+                OriginalLanguage = movieDetailsRequestModel.OriginalLanguage,
+                ReleaseDate = movieDetailsRequestModel.ReleaseDate,
+                RunTime = movieDetailsRequestModel.RunTime,
+                Price = movieDetailsRequestModel.Price
+
+            };
+            var createdMovie = await _movieRepository.AddAsync(movie);
+            if (createdMovie != null && createdMovie.Id > 0)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public async Task<MovieDetailsResponseModel> GetMovieById(int id)
@@ -100,5 +135,7 @@ namespace MovieShop.Infrastructure.Services
 
             return movieCardResponseModel;
         }
+
+        
     }
 }

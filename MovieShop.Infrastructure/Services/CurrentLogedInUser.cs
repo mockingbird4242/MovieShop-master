@@ -40,7 +40,7 @@ namespace MovieShop.Infrastructure.Services
 
         public string Email => throw new NotImplementedException();
 
-        public List<string> Roles => throw new NotImplementedException();
+        public string Roles => GetRoles();
 
         public bool IsAdmin => throw new NotImplementedException();
 
@@ -48,6 +48,12 @@ namespace MovieShop.Infrastructure.Services
 
         public int UserId => GetUserId();
 
+
+        private string GetRoles()
+        {
+            var roles = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role).Value;
+            return roles;
+        }
         private int GetUserId()
         {
             var userId = Convert.ToInt32(  _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value);

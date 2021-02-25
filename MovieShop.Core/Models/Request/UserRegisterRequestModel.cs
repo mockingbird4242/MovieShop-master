@@ -33,5 +33,8 @@ namespace MovieShop.Core.Models.Request
 
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
+
+        [Required(ErrorMessage ="Role cannot be empty")]
+        public string Role { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace MovieShop.Infrastructure.Services
                 TotalPrice = (decimal)totalPrice,
                 UserId = purchaseRequest.UserId,
 
+
             };
             var createdPurchase = await _purchaseRepository.AddAsync(purchaseResponse);
 
@@ -67,8 +68,19 @@ namespace MovieShop.Infrastructure.Services
                 HashedPassword = hashedPassword,
                 FirstName = userRegisterRequestModel.FirstName,
                 LastName = userRegisterRequestModel.LastName,
-                DateOfBirth = userRegisterRequestModel.DateOfBirth
+                DateOfBirth = userRegisterRequestModel.DateOfBirth,
+                Roles = new List<Role>()
+
+
             };
+
+
+            user.Roles.Add(new Role {Name = userRegisterRequestModel.Role });
+
+
+            /*user.Roles.Add(new Role { Name = userRegisterRequestModel.Role, Users = new List<User>((IEnumerable<User>)user)});*/
+
+
 
             var createdUser = await _userRepository.AddAsync(user);
 
@@ -92,6 +104,7 @@ namespace MovieShop.Infrastructure.Services
 
             // get the roles of that user and 
 
+
             if (hashedPassword == dbUser.HashedPassword)
             {
                 // User has entered correct password
@@ -103,9 +116,14 @@ namespace MovieShop.Infrastructure.Services
                     FirstName = dbUser.FirstName,
                     LastName = dbUser.LastName,
                     DateOfBirth = dbUser.DateOfBirth,
-                    Roles = null
+                    Roles = new List<RoleModel>()
 
                 };
+                foreach (var role in dbUser.Roles)
+                {
+                    
+                    loginResponse.Roles.Add(new RoleModel { Id = role.Id, Name = role.Name });
+                }
 
                 return loginResponse;
             }
