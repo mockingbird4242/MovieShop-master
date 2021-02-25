@@ -50,6 +50,7 @@ namespace MovieShop.API
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICryptoService, CryptoService>();
             services.AddTransient<ICurrentLogedInUser, CurrentLogedInUser>();
+            services.AddTransient<IPurchaseRepository, PurchaseRepository>();
 
             services.AddDbContext<MovieShopDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("MovieShopDbConnection")));

@@ -135,7 +135,142 @@ namespace MovieShop.Infrastructure.Services
 
             return movieCardResponseModel;
         }
+        public async Task<List<MovieDetailsResponseModel>> GetAllMovies(MovieParameters movieParameters)
+        {
+            var movieDetailsResponse = new List<MovieDetailsResponseModel>();
+            var movies = await _movieRepository.GetMovies(movieParameters);
+            foreach (var movie in movies)
+            {
+                var movieDetails = new MovieDetailsResponseModel
+                {
+                    Id = movie.Id,
+                    PosterUrl = movie.PosterUrl,
+                    Revenue = movie.Revenue,
+                    Title = movie.Title,
+                    OriginalLanguage = movie.OriginalLanguage,
+                    ReleaseDate = movie.ReleaseDate,
+                    RunTime = movie.RunTime,
+                    Price = movie.Price
+                };
+                movieDetailsResponse.Add(movieDetails);
 
-        
+            }
+
+            return movieDetailsResponse;
+            /*var movieDetails = new List<MovieDetailsResponseModel>();
+            var movies = await _movieRepository.GetMovies(movieParameters);
+
+            // map movie entity to MovieDetailsResponseModel
+            foreach (var singleMovie in movies)
+            {
+                var movie = new MovieDetailsResponseModel();
+                movie.Id = singleMovie.Id;
+                movie.PosterUrl = singleMovie.PosterUrl;
+                movie.Title = singleMovie.Title;
+                movie.Overview = singleMovie.Overview;
+                movie.Tagline = singleMovie.Tagline;
+                movie.Budget = singleMovie.Budget;
+                movie.Revenue = singleMovie.Revenue;
+                movie.ImdbUrl = singleMovie.ImdbUrl;
+                movie.TmdbUrl = singleMovie.TmdbUrl;
+                movie.BackdropUrl = singleMovie.BackdropUrl;
+                movie.OriginalLanguage = singleMovie.OriginalLanguage;
+                movie.ReleaseDate = singleMovie.ReleaseDate;
+                movie.RunTime = singleMovie.RunTime;
+                movie.Price = singleMovie.Price;
+
+                movie.Genres = new List<GenreModel>();
+                foreach (var genre in singleMovie.Genres)
+                {
+                    movie.Genres.Add(new GenreModel { Id = genre.Id, Name = genre.Name });
+                }
+                movie.Casts = new List<CastResponseModel>();
+                foreach (var cast in singleMovie.MovieCasts)
+                {
+                    movie.Casts.Add(new CastResponseModel
+                    {
+                        Id = cast.CastId,
+                        Character = cast.Character,
+                        Name = cast.Cast.Name,
+                        ProfilePath = cast.Cast.ProfilePath
+                    });
+                }
+            }
+            
+
+            
+
+            return movieDetails;*/
+        }
+        public async Task<List<MovieDetailsResponseModel>> GetAllMovies()
+        {
+            var movieDetailsResponse = new List<MovieDetailsResponseModel>();
+            var movies = await _movieRepository.GetMovies();
+
+            // map movie entity to MovieDetailsResponseModel
+            /*foreach (var singleMovie in movies)
+            {
+                var movie = new MovieDetailsResponseModel();
+                movie.Id = singleMovie.Id;
+                movie.PosterUrl = singleMovie.PosterUrl;
+                movie.Title = singleMovie.Title;
+                *//*movie.Overview = singleMovie.Overview;
+                movie.Tagline = singleMovie.Tagline;
+                movie.Budget = singleMovie.Budget;*//*
+                movie.Revenue = singleMovie.Revenue;
+                *//*movie.ImdbUrl = singleMovie.ImdbUrl;
+                movie.TmdbUrl = singleMovie.TmdbUrl;
+                movie.BackdropUrl = singleMovie.BackdropUrl;*//*
+                movie.OriginalLanguage = singleMovie.OriginalLanguage;
+                movie.ReleaseDate = singleMovie.ReleaseDate;
+                movie.RunTime = singleMovie.RunTime;
+                movie.Price = singleMovie.Price;*/
+
+               /* movie.Genres = new List<GenreModel>();
+                foreach (var genre in singleMovie.Genres)
+                {
+                    movie.Genres.Add(new GenreModel { Id = genre.Id, Name = genre.Name });
+                }
+                movie.Casts = new List<CastResponseModel>();
+                foreach (var cast in singleMovie.MovieCasts)
+                {
+                    movie.Casts.Add(new CastResponseModel
+                    {
+                        Id = cast.CastId,
+                        Character = cast.Character,
+                        Name = cast.Cast.Name,
+                        ProfilePath = cast.Cast.ProfilePath
+                    });
+                }*/
+            //}
+
+            foreach (var movie in movies)
+            {
+                var movieDetails = new MovieDetailsResponseModel
+                {
+                    Id = movie.Id,
+                    PosterUrl = movie.PosterUrl,
+                    Revenue = movie.Revenue,
+                    Title = movie.Title,
+                    OriginalLanguage = movie.OriginalLanguage,
+                    ReleaseDate = movie.ReleaseDate,
+                    RunTime = movie.RunTime,
+                    Price = movie.Price
+                };
+                movieDetailsResponse.Add(movieDetails);
+
+            }
+
+            return movieDetailsResponse;
+
+
+
+
+/*            return movieDetails;*/
+        }
+
+
+
+
     }
 }

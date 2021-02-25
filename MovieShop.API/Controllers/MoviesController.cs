@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using MovieShop.Core.Models.Response;
 using MovieShop.Core.ServiceInterfaces;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,23 @@ namespace MovieShop.API.Controllers
             // Serialization , convert your C# objects in t JSON objetcs
             // De-Serialization, convert json objects to C#
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllMovies([FromQuery] MovieParameters movieParameters)
+        {
+            var movies = await _movieService.GetAllMovies(movieParameters);
+
+            if (!movies.Any())
+            {
+                return NotFound("We did not find any movies");
+            }
+            return Ok(movies);
+
+            // System.Text.Json in .NET Core 3
+            // previous versions of .Net 1,2 and previous older .NET Framework Newtonsoft, 3rdy party library
+            // Serialization , convert your C# objects in t JSON objetcs
+            // De-Serialization, convert json objects to C#
+        }
+
+
     }
 }

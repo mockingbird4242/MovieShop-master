@@ -7,6 +7,7 @@ using MovieShop.Core.RepositoryInterfaces;
 using MovieShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using MovieShop.Core.Models.Response;
 
 namespace MovieShop.Infrastructure.Repositories
 {
@@ -62,6 +63,19 @@ namespace MovieShop.Infrastructure.Repositories
         {
             var movie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.Title == title);
             return movie;
+        }
+
+        public async Task<IEnumerable<Movie>> GetMovies(MovieParameters movieParameters)
+        {
+            var movies = await _dbContext.Movies.OrderBy(on => on.Id).Skip((movieParameters.PageNumber - 1) * movieParameters.PageSize).Take(movieParameters.PageSize).ToListAsync();
+            return movies;
+        }
+
+        public async Task<IEnumerable<Movie>> GetMovies()
+        {
+            return await _dbContext.Movies.OrderBy(m => m.Id).Take(30).ToListAsync();
+
+
         }
     }
 }
