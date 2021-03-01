@@ -12,6 +12,6 @@ namespace MovieShop.Core.ServiceInterfaces
         string Roles { get; }
         bool IsAdmin { get; }
         bool IsSuperAdmin { get; }
-        int UserId { get; }
+        int? UserId { get; }
     }
 }

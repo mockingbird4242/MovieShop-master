@@ -1,4 +1,5 @@
-﻿using MovieShop.Core.Models.Request;
+﻿using MovieShop.Core.Entities;
+using MovieShop.Core.Models.Request;
 using MovieShop.Core.Models.Response;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,9 @@ namespace MovieShop.Core.ServiceInterfaces
         Task<bool> RegisterUser(UserRegisterRequestModel userRegisterRequestModel);
         Task<LoginResponseModel> ValidateUser(LoginRequestModel loginRequestModel);
         Task<bool> PurchaseMovie(PurchaseRequestModel purchaseRequest);
+
+        Task<UserRegisterResponseModel> GetUserById(int id);
+        Task<User> GetUser(string email);
+        Task AddFavorite(FavoriteRequestModel favoriteRequest);
     }
 }

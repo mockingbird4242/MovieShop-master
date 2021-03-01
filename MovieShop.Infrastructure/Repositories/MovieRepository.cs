@@ -8,6 +8,8 @@ using MovieShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using MovieShop.Core.Models.Response;
+using ApplicationCore.Helpers;
+using ApplicationCore.Exceptions;
 
 namespace MovieShop.Infrastructure.Repositories
 {
@@ -17,9 +19,31 @@ namespace MovieShop.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<Movie>> GetTopRatedMovies()
+        public async Task<IEnumerable<MovieRatingResponseModel>> GetTopRatedMovies()
         {
-            throw new NotImplementedException();
+            var topRatedMovies = await _dbContext.Reviews.Include(m => m.Movie)
+                                                 .GroupBy(r => new
+                                                 {
+                                                     Id = r.MovieId,
+                                                     r.Movie.PosterUrl,
+                                                     r.Movie.Title,
+                                                     r.Movie.ReleaseDate
+                                                 })
+                                                 .OrderByDescending(g => g.Average(m => m.Rating))
+                                                 .Select(m => new MovieRatingResponseModel
+                                                 {
+                                                     Id = m.Key.Id,
+                                                     PosterUrl = m.Key.PosterUrl,
+                                                     Title = m.Key.Title,
+                                                     ReleaseDate = m.Key.ReleaseDate,
+                                                     Rating = m.Average(x => x.Rating)
+                                                 })
+                                                 .Take(10)
+                                                 .ToListAsync();
+
+            return topRatedMovies;
+
+
         }
 
         public async Task<IEnumerable<Movie>> GetTopRevenueMovies()
@@ -67,7 +91,7 @@ namespace MovieShop.Infrastructure.Repositories
 
         public async Task<IEnumerable<Movie>> GetMovies(MovieParameters movieParameters)
         {
-            var movies = await _dbContext.Movies.OrderBy(on => on.Id).Skip((movieParameters.PageNumber - 1) * movieParameters.PageSize).Take(movieParameters.PageSize).ToListAsync();
+            var movies = await _dbContext.Movies.Include(m => m.MovieCasts).ThenInclude(m => m.Cast).Include(m => m.Genres).OrderBy(on => on.Id).Skip((movieParameters.PageNumber - 1) * movieParameters.PageSize).Take(movieParameters.PageSize).ToListAsync();
             return movies;
         }
 
@@ -76,6 +100,47 @@ namespace MovieShop.Infrastructure.Repositories
             return await _dbContext.Movies.OrderBy(m => m.Id).Take(30).ToListAsync();
 
 
+        }
+
+        public async Task<PaginatedList<Movie>> GetMoviesByGenre(int genreId, int pageSize = 25, int page = 1)
+        {
+            var totalMoviesCountByGenre =
+                await _dbContext.Genres.Include(g => g.Movies).Where(g => g.Id == genreId).SelectMany(g => g.Movies)
+                    .CountAsync();
+
+            if (totalMoviesCountByGenre == 0)
+            {
+                throw new NotFoundException("NO Movies found for this genre");
+            }
+            var movies = await _dbContext.Genres.Include(g => g.Movies).Where(g => g.Id == genreId)
+                .SelectMany(g => g.Movies)
+                .OrderByDescending(m => m.Revenue).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new PaginatedList<Movie>(movies, totalMoviesCountByGenre, page, pageSize);
+        }
+
+        public async Task<Movie> GetMovieById(int id)
+        {
+            var movie = await _dbContext.Movies.FirstOrDefaultAsync(m => m.Id == id);
+            return movie;
+        }
+
+        public async Task<Cast> GetCastById(int id)
+        {
+            var countCastById =
+                await _dbContext.MovieCasts.Where(mc => mc.MovieId == id).Select(c => c.Cast).CountAsync();
+
+            if (countCastById== 0)
+            {
+                throw new NotFoundException("NO Cast found for this movie");
+            }
+            //var cast = await _dbContext.MovieCasts.Include(mc => mc.Cast).Where(mc => mc.MovieId == id).ToListAsync();
+            var cast = await _dbContext.MovieCasts.Include(g => g.Cast).Where(g => g.MovieId == id)
+                .Select(g => g.Cast).ToListAsync();
+            var cast2 = await _dbContext.Casts.Where(c => c.Id == id).Include(c => c.MovieCasts)
+                                      .ThenInclude(c => c.Movie).FirstOrDefaultAsync();
+
+            return cast2;
         }
     }
 }

@@ -55,6 +55,40 @@ namespace MovieShop.API.Controllers
             // De-Serialization, convert json objects to C#
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetMovieById(int id)
+        {
+            var movie = await _movieService.GetMovieById(id);
+            if (movie != null)
+            {
+                return Ok(movie);
+            }
+            return NotFound("No Movies Found");
+        }
+        [HttpGet]
+        [Route("toprated")]
+        public async Task<IActionResult> GetTopRatedMovies()
+        {
+            var movies = await _movieService.GetTop10RatedMovies();
+            return Ok(movies);
+
+
+        }
+        [HttpGet]
+        [Route("{id:int}/reviews")]
+        public async Task<IActionResult> GetMovieReviews(int id)
+        {
+            var reviews = await _movieService.GetReviewsForMovie(id);
+            return Ok(reviews);
+        }
+        [HttpGet]
+        [Route("genre/{genreId:int}")]
+        public async Task<IActionResult> GetMoviesByGenre(int genreId)
+        {
+            var movies = await _movieService.GetMoviesByGenre(genreId);
+            return Ok(movies);
+        }
 
     }
 }

@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace MovieShop.Core.Models.Request
 {
     public class MovieDetailsRequestModel
     {
-        public string Title { get; set; }
-        public string Overview { get; set; }
-        public string Tagline { get; set; }
-        public decimal? Budget { get; set; } //? means nullable, we may not know the value at first
+        [Required] [StringLength(150)] public string Title { get; set; }
+        [StringLength(2084)] public string Overview { get; set; }
+        [StringLength(2084)] public string Tagline { get; set; }
+        [Range(0, 500000000)] public decimal? Budget { get; set; }
+        [Range(0, 5000000000)]
+        [RegularExpression("^(\\d{1,18})(.\\d{1})?$")] 
         public decimal? Revenue { get; set; }
-        public string ImdbUrl { get; set; }
-        public string TmdbUrl { get; set; }
-        public string PosterUrl { get; set; }
-        public string BackdropUrl { get; set; }
+        [Url] public string ImdbUrl { get; set; }
+        [Url] public string TmdbUrl { get; set; }
+        [Required] [Url] public string PosterUrl { get; set; }
+        [Required] [Url] public string BackdropUrl { get; set; }
         public string OriginalLanguage { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? ReleaseDate { get; set; }
         public int? RunTime { get; set; }
+        [Range(.99, 49)]
         public decimal? Price { get; set; }
 
         public List<GenreRequestModel> Genres { get; set; }

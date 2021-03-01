@@ -16,6 +16,7 @@ using MovieShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MovieShop.Core.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Infrastructure.Helpers;
 
 namespace MovieShop.MVC
 {
@@ -50,6 +51,7 @@ namespace MovieShop.MVC
 
             services.AddDbContext<MovieShopDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("MovieShopDbConnection")));
+            services.AddAutoMapper(typeof(Startup), typeof(MovieShopMappingProfile));
 
             services.AddHttpContextAccessor();
 

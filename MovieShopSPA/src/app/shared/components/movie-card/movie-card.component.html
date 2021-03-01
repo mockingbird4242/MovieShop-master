@@ -1,0 +1,6 @@
+<div class="card mb-4 shadow bg-light">
+    <!-- when i click on movie card it should go to Movie Details, and pass id of the movie -->
+    <a [routerLink]="['/movies/', movie.id]">
+      <img src="{{ movie.posterUrl }}" class="img-fluid" alt="{{movie.title}}" />
+    </a>
+  </div>

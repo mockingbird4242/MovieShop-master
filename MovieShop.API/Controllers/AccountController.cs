@@ -25,12 +25,14 @@ namespace MovieShop.API.Controllers
             return Ok(registeredUser);
         }*/
         private readonly IUserService _userService;
-        public AccountController(IUserService userService)
+        private readonly IJwtService _jwtService;
+        public AccountController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
+            _jwtService = jwtService;
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterUser(UserRegisterRequestModel requestModel)
+        public async Task<IActionResult> RegisterUser([FromBody]UserRegisterRequestModel requestModel)
         {
             if (!ModelState.IsValid)
             {
@@ -39,6 +41,36 @@ namespace MovieShop.API.Controllers
             bool registeredUser = await _userService.RegisterUser(requestModel);
             return Ok(registeredUser);
         }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetUserByID(int id)
+        {
+            var user = await _userService.GetUserById(id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            return NotFound("No User Found");
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> LoginAsync([FromBody] LoginRequestModel loginRequest)
+        {
+            var user = await _userService.ValidateUser(loginRequest);
+            if (user == null) return Unauthorized();
+
+            var tokenObject = new { token = _jwtService.GenerateJWT(user) };
+            return Ok(tokenObject  );
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EmailExists([FromQuery] string email)
+        {
+            var user = await _userService.GetUser(email);
+            return Ok(user == null ? new { emailExists = false } : new { emailExists = true });
+        }
+
 
     }
 }

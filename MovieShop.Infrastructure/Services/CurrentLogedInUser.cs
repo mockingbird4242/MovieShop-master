@@ -46,7 +46,7 @@ namespace MovieShop.Infrastructure.Services
 
         public bool IsSuperAdmin => throw new NotImplementedException();
 
-        public int UserId => GetUserId();
+        public int? UserId => GetUserId();
 
 
         private string GetRoles()
